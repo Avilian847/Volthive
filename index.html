@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Volthive — Premium Electronics & Gadgets. Shop the latest tech at unbeatable prices.">
+  <title>Volthive — Electronics & Gadgets Store</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav__inner">
+
+      <!-- Logo -->
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">⚡</div>
+        Volt<span>hive</span>
+      </a>
+
+      <!-- Desktop Links -->
+      <ul class="nav__links">
+        <li><a href="index.html"    class="nav__link active">Home</a></li>
+        <li><a href="products.html" class="nav__link">Products</a></li>
+        <li><a href="products.html?cat=Audio"    class="nav__link">Audio</a></li>
+        <li><a href="products.html?cat=Laptops"  class="nav__link">Laptops</a></li>
+        <li><a href="products.html?cat=Tablets"  class="nav__link">Tablets</a></li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="nav__actions">
+        <!-- Search -->
+        <div class="nav__search">
+          <span class="nav__search-icon">🔍</span>
+          <input id="navSearch" type="search" class="nav__search-input"
+                 placeholder="Search gadgets..." aria-label="Search products">
+        </div>
+        <!-- Dark Toggle -->
+        <button id="darkToggle" class="dark-toggle" title="Toggle theme" aria-label="Toggle dark mode">☀️</button>
+        <!-- Wishlist -->
+        <a href="profile.html" class="nav__btn" title="Wishlist" aria-label="Wishlist">🤍</a>
+        <!-- Cart -->
+        <a href="cart.html" class="nav__btn" title="Cart" aria-label="Cart">
+          🛒
+          <span class="nav__badge cart-badge" style="display:none">0</span>
+        </a>
+        <!-- Profile -->
+        <button id="profileBtn" class="nav__btn" title="Account" aria-label="Account">👤</button>
+        <!-- Mobile Menu -->
+        <button id="hamburger" class="nav__hamburger" aria-label="Toggle mobile menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div id="mobileNav" class="nav__mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="index.html"    class="nav__mobile-link">🏠 Home</a>
+  <a href="products.html" class="nav__mobile-link">📦 Products</a>
+  <a href="cart.html"     class="nav__mobile-link">🛒 Cart</a>
+  <a href="login.html"    class="nav__mobile-link">👤 Account</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__grid-lines"></div>
+  <div class="container">
+    <div class="hero__inner">
+      <!-- Content -->
+      <div class="hero__content">
+        <div class="hero__eyebrow">
+          <span class="hero__eyebrow-dot"></span>
+          New Arrivals 2024
+        </div>
+        <h1 class="hero__title">
+          The Future of<br>
+          <span class="line-accent">Tech Lives Here</span>
+        </h1>
+        <p class="hero__subtitle">
+          Discover premium electronics and cutting-edge gadgets, curated for those who demand the best. From audiophile-grade headphones to powerhouse laptops.
+        </p>
+        <div class="hero__actions">
+          <a href="products.html" class="btn btn-primary btn-lg">
+            Shop Now →
+          </a>
+          <a href="products.html?sort=rating" class="btn btn-secondary btn-lg">
+            Top Rated
+          </a>
+        </div>
+        <div class="hero__stats">
+          <div>
+            <div class="hero__stat-num">500+</div>
+            <div class="hero__stat-label">Products</div>
+          </div>
+          <div>
+            <div class="hero__stat-num">50K+</div>
+            <div class="hero__stat-label">Happy Customers</div>
+          </div>
+          <div>
+            <div class="hero__stat-num">4.9★</div>
+            <div class="hero__stat-label">Avg Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="hero__visual">
+        <div class="hero__visual-ring"></div>
+        <div class="hero__visual-ring"></div>
+        <div class="hero__product-showcase">
+          <img src="https://placehold.co/280x280/0f1117/00d4ff?text=⚡+Volthive"
+               alt="Featured product">
+        </div>
+        <!-- Floating badges -->
+        <div class="hero__floating-badge hero__floating-badge--price">
+          <div style="font-size:0.65rem;color:var(--text-2);margin-bottom:0.15rem">Today's Deal</div>
+          <div class="price">$249.00</div>
+          <div style="font-size:0.65rem;color:var(--success)">Save $50 ↓</div>
+        </div>
+        <div class="hero__floating-badge hero__floating-badge--rating">
+          <div style="display:flex;align-items:center;gap:0.4rem">
+            <span style="color:var(--warning)">★★★★★</span>
+            <span style="font-size:0.72rem;font-weight:700">4.9</span>
+          </div>
+          <div style="font-size:0.68rem;color:var(--text-2);margin-top:0.1rem">3,820 Reviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CATEGORIES
+════════════════════════════════════════════ -->
+<section class="section-sm" style="padding-top:40px">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header__eyebrow">Browse By</div>
+      <h2 class="section-header__title">Shop <em>Categories</em></h2>
+    </div>
+    <div class="categories-grid" id="categoriesGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FEATURED PRODUCTS
+════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+      <div>
+        <div class="section-header__eyebrow">Handpicked</div>
+        <h2 class="section-header__title">Featured <em>Products</em></h2>
+      </div>
+      <a href="products.html" class="btn btn-secondary">View All →</a>
+    </div>
+    <div class="product-grid" id="featuredGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     DEALS BANNER
+════════════════════════════════════════════ -->
+<section class="section-sm">
+  <div class="container">
+    <div class="deals-banner">
+      <div>
+        <span class="badge badge-danger" style="margin-bottom:0.75rem">🔥 Flash Sale</span>
+        <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:0.5rem">
+          Deals of the Day
+        </h2>
+        <p style="color:var(--text-2);max-width:400px;margin-bottom:1rem">
+          Up to 30% off on selected electronics. Hurry — limited stock available at these prices.
+        </p>
+        <div class="deals-timer" aria-label="Countdown timer">
+          <div class="deals-timer__unit">
+            <div class="deals-timer__num" id="timer-h">10</div>
+            <div class="deals-timer__label">Hrs</div>
+          </div>
+          <div class="deals-timer__unit">
+            <div class="deals-timer__num" id="timer-m">00</div>
+            <div class="deals-timer__label">Min</div>
+          </div>
+          <div class="deals-timer__unit">
+            <div class="deals-timer__num" id="timer-s">00</div>
+            <div class="deals-timer__label">Sec</div>
+          </div>
+        </div>
+      </div>
+      <a href="products.html?sort=sale" class="btn btn-primary btn-lg">
+        See All Deals
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     DEALS PRODUCTS
+════════════════════════════════════════════ -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="product-grid" id="dealsGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     WHY VOLTHIVE
+════════════════════════════════════════════ -->
+<section class="section" style="background:var(--bg-2);margin:0">
+  <div class="container">
+    <div class="section-header section-header--center">
+      <div class="section-header__eyebrow">Why Choose Us</div>
+      <h2 class="section-header__title">The Volthive <em>Difference</em></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem">
+      <div style="text-align:center;padding:2rem 1.5rem;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem">🚚</div>
+        <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem">Free Shipping</h3>
+        <p style="color:var(--text-2);font-size:0.875rem">Free on orders over $75. Express delivery available.</p>
+      </div>
+      <div style="text-align:center;padding:2rem 1.5rem;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem">🔒</div>
+        <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem">Secure Payment</h3>
+        <p style="color:var(--text-2);font-size:0.875rem">256-bit SSL encryption. Your data is always safe.</p>
+      </div>
+      <div style="text-align:center;padding:2rem 1.5rem;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem">↩️</div>
+        <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem">30-Day Returns</h3>
+        <p style="color:var(--text-2);font-size:0.875rem">Changed your mind? No hassle returns within 30 days.</p>
+      </div>
+      <div style="text-align:center;padding:2rem 1.5rem;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem">🎧</div>
+        <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.5rem">24/7 Support</h3>
+        <p style="color:var(--text-2);font-size:0.875rem">Real humans, real help. Chat, email or call anytime.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__brand-name">Volt<span>hive</span></div>
+        <p class="footer__tagline">Your one-stop destination for premium electronics, cutting-edge gadgets, and the tech that powers your life.</p>
+        <div class="footer__socials">
+          <a href="#" class="footer__social" aria-label="Twitter">𝕏</a>
+          <a href="#" class="footer__social" aria-label="Instagram">📷</a>
+          <a href="#" class="footer__social" aria-label="YouTube">▶️</a>
+          <a href="#" class="footer__social" aria-label="TikTok">🎵</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-title">Shop</div>
+        <ul class="footer__links">
+          <li><a href="products.html"             class="footer__link">All Products</a></li>
+          <li><a href="products.html?cat=Audio"   class="footer__link">Audio</a></li>
+          <li><a href="products.html?cat=Laptops" class="footer__link">Laptops</a></li>
+          <li><a href="products.html?cat=Tablets" class="footer__link">Tablets</a></li>
+          <li><a href="products.html?sort=sale"   class="footer__link">Deals</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Account</div>
+        <ul class="footer__links">
+          <li><a href="login.html"    class="footer__link">Login</a></li>
+          <li><a href="register.html" class="footer__link">Register</a></li>
+          <li><a href="profile.html"  class="footer__link">My Profile</a></li>
+          <li><a href="cart.html"     class="footer__link">Cart</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Support</div>
+        <ul class="footer__links">
+          <li><a href="#" class="footer__link">Help Centre</a></li>
+          <li><a href="#" class="footer__link">Returns</a></li>
+          <li><a href="#" class="footer__link">Shipping Info</a></li>
+          <li><a href="#" class="footer__link">Privacy Policy</a></li>
+          <li><a href="#" class="footer__link">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2024 Volthive. All rights reserved.</span>
+      <span>Built with ⚡ by Volthive Team</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // ── Render Categories ──────────────────────────────────────
+  const categoryMeta = {
+    'Audio':       { icon: '🎧', count: 3 },
+    'Laptops':     { icon: '💻', count: 2 },
+    'Tablets':     { icon: '📱', count: 2 },
+    'Accessories': { icon: '🖱️', count: 3 },
+    'Drones':      { icon: '🚁', count: 1 },
+    'Monitors':    { icon: '🖥️', count: 1 }
+  };
+
+  const catGrid = document.getElementById('categoriesGrid');
+  if (catGrid) {
+    catGrid.innerHTML = Object.entries(categoryMeta).map(([name, meta]) => `
+      <a href="products.html?cat=${name}" class="category-card">
+        <div class="category-card__icon">${meta.icon}</div>
+        <div class="category-card__name">${name}</div>
+        <div class="category-card__count">${meta.count} products</div>
+      </a>
+    `).join('');
+  }
+
+  // ── Render Featured Products ───────────────────────────────
+  renderProductGrid('featuredGrid', FEATURED_PRODUCTS);
+
+  // ── Render Deal Products ───────────────────────────────────
+  renderProductGrid('dealsGrid', DEAL_PRODUCTS);
+
+  // ── Start countdown ────────────────────────────────────────
+  startCountdown(10);
+</script>
+</body>
+</html>

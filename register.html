@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your free Volthive account and start shopping premium electronics today.">
+  <title>Register — Volthive</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Auth Page Layout ───────────────────────────────── */
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left panel — branding */
+    .auth-panel {
+      background: var(--bg-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 30% 40%, rgba(123,92,255,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 70% 70%, rgba(0,212,255,.06) 0%, transparent 70%);
+    }
+    .auth-panel__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(123,92,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(123,92,255,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .auth-panel__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 360px;
+    }
+    .auth-panel__logo {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-1);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 2.5rem;
+    }
+    .auth-panel__logo span { color: var(--accent); }
+    .auth-panel__logo-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-gradient);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(0,212,255,.4);
+    }
+    .auth-panel__tagline {
+      font-size: 1.7rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .auth-panel__tagline .line-accent {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .auth-panel__sub {
+      color: var(--text-2);
+      font-size: .95rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+    .auth-panel__perks {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      text-align: left;
+    }
+    .auth-perk {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .9rem;
+      color: var(--text-2);
+    }
+    .auth-perk__icon {
+      width: 32px; height: 32px;
+      background: rgba(123,92,255,.08);
+      border: 1px solid rgba(123,92,255,.15);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    /* Right panel — form */
+    .auth-form-panel {
+      background: var(--bg-1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 440px;
+    }
+    .auth-form-wrap h1 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: .5rem;
+    }
+    .auth-form-wrap .auth-sub {
+      color: var(--text-2);
+      font-size: .9rem;
+      margin-bottom: 2rem;
+    }
+    .auth-form-wrap .auth-sub a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .auth-form-wrap .auth-sub a:hover { text-decoration: underline; }
+
+    /* Two-col fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* Password strength bar */
+    .pwd-strength {
+      margin-top: .4rem;
+    }
+    .pwd-strength__bar {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--bg-3);
+      overflow: hidden;
+    }
+    .pwd-strength__fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width .3s, background .3s;
+    }
+    .pwd-strength__label {
+      font-size: .75rem;
+      color: var(--text-3);
+      margin-top: .25rem;
+    }
+
+    /* Terms note */
+    .auth-terms {
+      font-size: .78rem;
+      color: var(--text-3);
+      text-align: center;
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+    .auth-terms a { color: var(--accent); text-decoration: none; }
+
+    /* Submit spinner */
+    .btn-spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      margin-left: .5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn--loading .btn-spinner { display: inline-block; }
+    .btn--loading .btn-label   { opacity: .7; }
+
+    /* Back link */
+    .auth-back {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: .85rem;
+      color: var(--text-2);
+    }
+    .auth-back a { color: var(--accent); text-decoration: none; }
+    .auth-back a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-panel { display: none; }
+      .auth-form-panel { padding: 2rem 1.5rem; justify-content: flex-start; padding-top: 6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">⚡</div>
+        Volt<span>hive</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html"    class="nav__link">Home</a></li>
+        <li><a href="products.html" class="nav__link">Products</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button id="darkToggle" class="dark-toggle" title="Toggle theme" aria-label="Toggle dark mode">☀️</button>
+        <a href="cart.html" class="nav__btn" title="Cart" aria-label="Cart">
+          🛒
+          <span class="nav__badge cart-badge" style="display:none">0</span>
+        </a>
+        <button id="hamburger" class="nav__hamburger" aria-label="Toggle mobile menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div id="mobileNav" class="nav__mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="index.html"    class="nav__mobile-link">🏠 Home</a>
+  <a href="products.html" class="nav__mobile-link">📦 Products</a>
+  <a href="cart.html"     class="nav__mobile-link">🛒 Cart</a>
+  <a href="login.html"    class="nav__mobile-link">👤 Account</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUTH PAGE
+════════════════════════════════════════════ -->
+<main class="auth-page">
+
+  <!-- Left: Branding panel -->
+  <div class="auth-panel">
+    <div class="auth-panel__grid"></div>
+    <div class="auth-panel__content">
+
+      <a href="index.html" class="auth-panel__logo">
+        <div class="auth-panel__logo-icon">⚡</div>
+        Volt<span>hive</span>
+      </a>
+
+      <p class="auth-panel__tagline">
+        Join the<br>
+        <span class="line-accent">tech community</span>
+      </p>
+      <p class="auth-panel__sub">
+        Create your free account and get access to exclusive deals, early product launches, and a seamless shopping experience.
+      </p>
+
+      <div class="auth-panel__perks">
+        <div class="auth-perk">
+          <div class="auth-perk__icon">🎁</div>
+          <span>Exclusive members-only deals</span>
+        </div>
+        <div class="auth-perk">
+          <div class="auth-perk__icon">🚀</div>
+          <span>Early access to new arrivals</span>
+        </div>
+        <div class="auth-perk">
+          <div class="auth-perk__icon">🔐</div>
+          <span>Secure checkout every time</span>
+        </div>
+        <div class="auth-perk">
+          <div class="auth-perk__icon">💬</div>
+          <span>Leave reviews and earn trust</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right: Register form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-wrap">
+
+      <h1>Create account</h1>
+      <p class="auth-sub">
+        Already have an account? <a href="login.html">Sign in →</a>
+      </p>
+
+      <!-- Register Form -->
+      <form id="registerForm" novalidate>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="registerFirstName" class="form-label">First name</label>
+            <input
+              type="text"
+              id="registerFirstName"
+              name="firstName"
+              class="form-input"
+              placeholder="John"
+              autocomplete="given-name"
+              required
+              aria-describedby="registerFirstNameError"
+            >
+            <span class="form-error" id="registerFirstNameError" role="alert"></span>
+          </div>
+          <div class="form-group">
+            <label for="registerLastName" class="form-label">Last name</label>
+            <input
+              type="text"
+              id="registerLastName"
+              name="lastName"
+              class="form-input"
+              placeholder="Doe"
+              autocomplete="family-name"
+              required
+              aria-describedby="registerLastNameError"
+            >
+            <span class="form-error" id="registerLastNameError" role="alert"></span>
+          </div>
+        </div>
+
+        <!-- Hidden full name field that auth.js reads as #registerName -->
+        <input type="hidden" id="registerName">
+
+        <div class="form-group">
+          <label for="registerEmail" class="form-label">Email address</label>
+          <input
+            type="email"
+            id="registerEmail"
+            name="email"
+            class="form-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            aria-describedby="registerEmailError"
+          >
+          <span class="form-error" id="registerEmailError" role="alert"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="registerPassword" class="form-label">Password</label>
+          <div style="position:relative">
+            <input
+              type="password"
+              id="registerPassword"
+              name="password"
+              class="form-input"
+              placeholder="Min. 8 characters"
+              autocomplete="new-password"
+              required
+              style="padding-right:3rem"
+              aria-describedby="registerPasswordError"
+            >
+            <button type="button" id="regPwdToggle"
+                    aria-label="Toggle password visibility"
+                    style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-2);padding:0">
+              👁️
+            </button>
+          </div>
+          <!-- Strength bar -->
+          <div class="pwd-strength" id="pwdStrength" style="display:none">
+            <div class="pwd-strength__bar">
+              <div class="pwd-strength__fill" id="pwdStrengthFill"></div>
+            </div>
+            <div class="pwd-strength__label" id="pwdStrengthLabel">Weak</div>
+          </div>
+          <span class="form-error" id="registerPasswordError" role="alert"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="registerConfirm" class="form-label">Confirm password</label>
+          <div style="position:relative">
+            <input
+              type="password"
+              id="registerConfirm"
+              name="confirmPassword"
+              class="form-input"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+              required
+              style="padding-right:3rem"
+              aria-describedby="registerConfirmError"
+            >
+            <button type="button" id="regConfirmToggle"
+                    aria-label="Toggle password visibility"
+                    style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-2);padding:0">
+              👁️
+            </button>
+          </div>
+          <span class="form-error" id="registerConfirmError" role="alert"></span>
+        </div>
+
+        <button type="submit" id="registerSubmit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.5rem">
+          <span class="btn-label">Create Account</span>
+          <span id="registerSpinner" class="btn-spinner"></span>
+        </button>
+
+        <p class="auth-terms">
+          By creating an account you agree to our
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </p>
+
+      </form>
+
+      <div class="auth-back">
+        <a href="index.html">← Back to Volthive</a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast container -->
+<div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  // Combine first + last name into #registerName before auth.js reads it
+  const firstInput   = document.getElementById('registerFirstName');
+  const lastInput    = document.getElementById('registerLastName');
+  const hiddenName   = document.getElementById('registerName');
+  const registerForm = document.getElementById('registerForm');
+
+  function syncFullName() {
+    const first = firstInput.value.trim();
+    const last  = lastInput.value.trim();
+    hiddenName.value = [first, last].filter(Boolean).join(' ');
+  }
+  firstInput.addEventListener('input', syncFullName);
+  lastInput.addEventListener('input', syncFullName);
+
+  // Validate first/last independently (auth.js validates #registerName)
+  function validateSplit(input, errorId, label) {
+    const errEl = document.getElementById(errorId);
+    if (!input.value.trim()) {
+      input.classList.add('form-input--error');
+      errEl.textContent = `${label} is required`;
+      return false;
+    }
+    input.classList.remove('form-input--error');
+    errEl.textContent = '';
+    return true;
+  }
+
+  registerForm.addEventListener('submit', (e) => {
+    const v1 = validateSplit(firstInput, 'registerFirstNameError', 'First name');
+    const v2 = validateSplit(lastInput,  'registerLastNameError',  'Last name');
+    if (!v1 || !v2) e.preventDefault();
+  }, true); // capture phase — runs before auth.js
+
+  // Password visibility toggles
+  function togglePwd(toggleId, inputId) {
+    const btn = document.getElementById(toggleId);
+    const inp = document.getElementById(inputId);
+    if (!btn || !inp) return;
+    btn.addEventListener('click', () => {
+      const isText = inp.type === 'text';
+      inp.type = isText ? 'password' : 'text';
+      btn.textContent = isText ? '👁️' : '🙈';
+    });
+  }
+  togglePwd('regPwdToggle',     'registerPassword');
+  togglePwd('regConfirmToggle', 'registerConfirm');
+
+  // Password strength meter
+  const pwdInput        = document.getElementById('registerPassword');
+  const strengthWrap    = document.getElementById('pwdStrength');
+  const strengthFill    = document.getElementById('pwdStrengthFill');
+  const strengthLabel   = document.getElementById('pwdStrengthLabel');
+
+  pwdInput.addEventListener('input', () => {
+    const val = pwdInput.value;
+    if (!val) { strengthWrap.style.display = 'none'; return; }
+    strengthWrap.style.display = 'block';
+
+    let score = 0;
+    if (val.length >= 8)                score++;
+    if (/[A-Z]/.test(val))              score++;
+    if (/[0-9]/.test(val))              score++;
+    if (/[^A-Za-z0-9]/.test(val))       score++;
+
+    const levels = [
+      { label: 'Weak',   color: '#ef4444', pct: '25%' },
+      { label: 'Fair',   color: '#f97316', pct: '50%' },
+      { label: 'Good',   color: '#eab308', pct: '75%' },
+      { label: 'Strong', color: '#22c55e', pct: '100%' },
+    ];
+    const lvl = levels[Math.max(0, score - 1)];
+    strengthFill.style.width      = lvl.pct;
+    strengthFill.style.background = lvl.color;
+    strengthLabel.textContent     = lvl.label;
+    strengthLabel.style.color     = lvl.color;
+  });
+
+  // Redirect already-logged-in users
+  const currentUser = JSON.parse(localStorage.getItem('volthive_user') || 'null');
+  if (currentUser) window.location.href = 'profile.html';
+</script>
+</body>
+</html>

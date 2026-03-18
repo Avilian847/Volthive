@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your Volthive account — view orders, update your profile and settings.">
+  <title>My Account — Volthive</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Profile Page Layout ────────────────────────────── */
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+      padding: 3rem 0 5rem;
+    }
+
+    /* Sidebar */
+    .profile-sidebar {
+      position: sticky;
+      top: 5rem;
+      height: fit-content;
+    }
+
+    /* Avatar card */
+    .profile-avatar-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem 1.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .profile-avatar {
+      width: 72px; height: 72px;
+      background: var(--accent-gradient);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0a0c10;
+      margin: 0 auto 1rem;
+      box-shadow: 0 0 24px rgba(0,212,255,.3);
+    }
+    .profile-avatar-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-1);
+      margin-bottom: .2rem;
+    }
+    .profile-avatar-email {
+      font-size: .8rem;
+      color: var(--text-2);
+      word-break: break-all;
+    }
+    .profile-avatar-joined {
+      font-size: .75rem;
+      color: var(--text-3);
+      margin-top: .5rem;
+    }
+
+    /* Sidebar nav */
+    .profile-nav {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .profile-nav__item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .9rem 1.25rem;
+      cursor: pointer;
+      font-size: .9rem;
+      color: var(--text-2);
+      border-left: 3px solid transparent;
+      transition: background .2s, color .2s, border-color .2s;
+      user-select: none;
+    }
+    .profile-nav__item:hover {
+      background: rgba(255,255,255,.03);
+      color: var(--text-1);
+    }
+    .profile-nav__item.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(0,212,255,.04);
+    }
+    .profile-nav__icon { font-size: 1rem; }
+    .profile-nav__badge {
+      margin-left: auto;
+      background: rgba(0,212,255,.15);
+      color: var(--accent);
+      font-size: .7rem;
+      font-weight: 700;
+      padding: .15rem .45rem;
+      border-radius: 999px;
+    }
+
+    /* Logout btn */
+    .profile-logout {
+      margin-top: 1rem;
+      width: 100%;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.2);
+      color: #ef4444;
+      border-radius: 10px;
+      padding: .7rem;
+      cursor: pointer;
+      font-size: .85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      transition: background .2s;
+    }
+    .profile-logout:hover { background: rgba(239,68,68,.14); }
+
+    /* Content area */
+    .profile-content {
+      min-width: 0; /* prevent overflow in grid */
+    }
+
+    /* Section header */
+    .profile-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .profile-section-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-1);
+    }
+
+    /* Tab panels */
+    .profile-tab { display: block; }
+    .profile-tab.hidden { display: none; }
+
+    /* Stats row */
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .profile-stat {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .profile-stat__value {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: block;
+    }
+    .profile-stat__label {
+      font-size: .8rem;
+      color: var(--text-2);
+      margin-top: .2rem;
+    }
+
+    /* Orders table */
+    .orders-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    .orders-table thead {
+      background: var(--bg-3);
+    }
+    .orders-table th {
+      padding: .85rem 1rem;
+      text-align: left;
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--text-2);
+    }
+    .orders-table td {
+      padding: .85rem 1rem;
+      color: var(--text-1);
+      border-top: 1px solid var(--border);
+    }
+    .orders-table tr:hover td {
+      background: rgba(255,255,255,.015);
+    }
+
+    /* Card wrapper for forms */
+    .profile-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .profile-card h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 1.25rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Two-col form grid */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* Wishlist grid */
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    /* Empty state */
+    .profile-empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-2);
+    }
+    .profile-empty .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .profile-empty p { font-size: .9rem; margin-bottom: 1.25rem; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+      .profile-sidebar {
+        position: static;
+      }
+      .profile-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 540px) {
+      .profile-stats { grid-template-columns: 1fr 1fr; }
+      .orders-table { font-size: .8rem; }
+      .orders-table th:last-child,
+      .orders-table td:last-child { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav__inner">
+
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">⚡</div>
+        Volt<span>hive</span>
+      </a>
+
+      <ul class="nav__links">
+        <li><a href="index.html"    class="nav__link">Home</a></li>
+        <li><a href="products.html" class="nav__link">Products</a></li>
+        <li><a href="products.html?cat=Audio"   class="nav__link">Audio</a></li>
+        <li><a href="products.html?cat=Laptops" class="nav__link">Laptops</a></li>
+        <li><a href="products.html?cat=Tablets" class="nav__link">Tablets</a></li>
+      </ul>
+
+      <div class="nav__actions">
+        <div class="nav__search">
+          <span class="nav__search-icon">🔍</span>
+          <input id="navSearch" type="search" class="nav__search-input"
+                 placeholder="Search gadgets..." aria-label="Search products">
+        </div>
+        <button id="darkToggle" class="dark-toggle" title="Toggle theme" aria-label="Toggle dark mode">☀️</button>
+        <a href="profile.html" class="nav__btn" title="Wishlist" aria-label="Wishlist">🤍</a>
+        <a href="cart.html" class="nav__btn" title="Cart" aria-label="Cart">
+          🛒
+          <span class="nav__badge cart-badge" style="display:none">0</span>
+        </a>
+        <button id="profileBtn" class="nav__btn nav__btn--active" title="Account" aria-label="Account">👤</button>
+        <button id="hamburger" class="nav__hamburger" aria-label="Toggle mobile menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div id="mobileNav" class="nav__mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="index.html"    class="nav__mobile-link">🏠 Home</a>
+  <a href="products.html" class="nav__mobile-link">📦 Products</a>
+  <a href="cart.html"     class="nav__mobile-link">🛒 Cart</a>
+  <a href="profile.html"  class="nav__mobile-link">👤 Account</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE HEADER
+════════════════════════════════════════════ -->
+<section style="background:var(--bg-2);border-bottom:1px solid var(--border);padding:2rem 0">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html" class="breadcrumb__item">Home</a>
+      <span class="breadcrumb__sep">›</span>
+      <span class="breadcrumb__item breadcrumb__item--active">My Account</span>
+    </nav>
+    <h1 style="font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--text-1);margin-top:.5rem">
+      My Account
+    </h1>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PROFILE PAGE
+════════════════════════════════════════════ -->
+<div class="container" id="profilePage">
+  <div class="profile-layout">
+
+    <!-- ── Sidebar ──────────────────────────────────────── -->
+    <aside class="profile-sidebar">
+
+      <!-- Avatar card -->
+      <div class="profile-avatar-card">
+        <div class="profile-avatar" id="profileInitials">--</div>
+        <div class="profile-avatar-name" id="profileDisplayName">Loading…</div>
+        <div class="profile-avatar-email" id="profileDisplayEmail">—</div>
+        <div class="profile-avatar-joined">
+          Member since <span id="profileJoined">—</span>
+        </div>
+      </div>
+
+      <!-- Sidebar nav -->
+      <nav class="profile-nav" aria-label="Profile sections">
+        <div class="profile-nav__item active" data-tab="overview" role="button" tabindex="0">
+          <span class="profile-nav__icon">📊</span>
+          Overview
+        </div>
+        <div class="profile-nav__item" data-tab="orders" role="button" tabindex="0">
+          <span class="profile-nav__icon">📦</span>
+          My Orders
+          <span class="profile-nav__badge" id="ordersBadge">0</span>
+        </div>
+        <div class="profile-nav__item" data-tab="wishlist" role="button" tabindex="0">
+          <span class="profile-nav__icon">🤍</span>
+          Wishlist
+          <span class="profile-nav__badge" id="wishlistBadge">0</span>
+        </div>
+        <div class="profile-nav__item" data-tab="settings" role="button" tabindex="0">
+          <span class="profile-nav__icon">⚙️</span>
+          Account Settings
+        </div>
+        <div class="profile-nav__item" data-tab="security" role="button" tabindex="0">
+          <span class="profile-nav__icon">🔒</span>
+          Security
+        </div>
+      </nav>
+
+      <!-- Logout -->
+      <button class="profile-logout" id="logoutBtn">
+        🚪 Sign Out
+      </button>
+
+    </aside>
+
+    <!-- ── Content ───────────────────────────────────────── -->
+    <main class="profile-content">
+
+      <!-- ── Overview tab ───────────────────────────────── -->
+      <div class="profile-tab" data-tab="overview">
+        <div class="profile-section-header">
+          <h2>Overview</h2>
+        </div>
+
+        <!-- Stats -->
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <span class="profile-stat__value" id="statOrders">0</span>
+            <div class="profile-stat__label">Orders placed</div>
+          </div>
+          <div class="profile-stat">
+            <span class="profile-stat__value" id="statWishlist">0</span>
+            <div class="profile-stat__label">Wishlist items</div>
+          </div>
+          <div class="profile-stat">
+            <span class="profile-stat__value" id="statCart">0</span>
+            <div class="profile-stat__label">Cart items</div>
+          </div>
+        </div>
+
+        <!-- Recent orders preview -->
+        <div class="profile-card">
+          <h3>Recent Orders</h3>
+          <div class="orders-card">
+            <table class="orders-table" aria-label="Recent orders">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentOrdersBody">
+                <tr>
+                  <td colspan="5" style="text-align:center;color:var(--text-2);padding:2rem">
+                    Loading orders…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Orders tab ──────────────────────────────────── -->
+      <div class="profile-tab hidden" data-tab="orders">
+        <div class="profile-section-header">
+          <h2>My Orders</h2>
+          <a href="products.html" class="btn btn-secondary btn-sm">+ New Order</a>
+        </div>
+        <div class="orders-card">
+          <table class="orders-table" aria-label="All orders">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr>
+                <td colspan="5" style="text-align:center;color:var(--text-2);padding:2rem">
+                  Loading…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Wishlist tab ────────────────────────────────── -->
+      <div class="profile-tab hidden" data-tab="wishlist">
+        <div class="profile-section-header">
+          <h2>Wishlist</h2>
+          <a href="products.html" class="btn btn-secondary btn-sm">Browse Products</a>
+        </div>
+        <div id="wishlistContent">
+          <div class="profile-empty">
+            <span class="icon">🤍</span>
+            <p>Your wishlist is empty.</p>
+            <a href="products.html" class="btn btn-primary btn-sm">Explore Products</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Settings tab ────────────────────────────────── -->
+      <div class="profile-tab hidden" data-tab="settings">
+        <div class="profile-section-header">
+          <h2>Account Settings</h2>
+        </div>
+
+        <!-- Personal info -->
+        <div class="profile-card">
+          <h3>Personal Information</h3>
+          <div class="form-row" style="margin-bottom:1rem">
+            <div class="form-group">
+              <label for="profileNameInput" class="form-label">Full name</label>
+              <input type="text" id="profileNameInput" class="form-input" placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="profileEmailInput" class="form-label">Email address</label>
+              <input type="email" id="profileEmailInput" class="form-input" placeholder="you@example.com" disabled
+                     title="Email cannot be changed">
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:1.5rem">
+            <div class="form-group">
+              <label for="profilePhone" class="form-label">Phone <span style="color:var(--text-3)">(optional)</span></label>
+              <input type="tel" id="profilePhone" class="form-input" placeholder="+1 234 567 8900">
+            </div>
+            <div class="form-group">
+              <label for="profileCountry" class="form-label">Country</label>
+              <select id="profileCountry" class="form-input">
+                <option value="">Select country</option>
+                <option value="KE">Kenya</option>
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="NG">Nigeria</option>
+                <option value="ZA">South Africa</option>
+                <option value="GH">Ghana</option>
+                <option value="CA">Canada</option>
+                <option value="AU">Australia</option>
+              </select>
+            </div>
+          </div>
+          <button id="saveProfile" class="btn btn-primary">Save Changes</button>
+        </div>
+
+        <!-- Preferences -->
+        <div class="profile-card">
+          <h3>Preferences</h3>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;font-size:.9rem;color:var(--text-1)">
+              <input type="checkbox" id="prefNewsletter" checked
+                     style="accent-color:var(--accent);width:16px;height:16px">
+              Receive newsletter and deal alerts
+            </label>
+            <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;font-size:.9rem;color:var(--text-1)">
+              <input type="checkbox" id="prefOrderUpdates" checked
+                     style="accent-color:var(--accent);width:16px;height:16px">
+              Order status email updates
+            </label>
+            <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;font-size:.9rem;color:var(--text-1)">
+              <input type="checkbox" id="prefWishlistAlerts"
+                     style="accent-color:var(--accent);width:16px;height:16px">
+              Notify me when wishlist items go on sale
+            </label>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:1.25rem"
+                  onclick="showToast('Preferences saved!','success')">
+            Save Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Security tab ────────────────────────────────── -->
+      <div class="profile-tab hidden" data-tab="security">
+        <div class="profile-section-header">
+          <h2>Security</h2>
+        </div>
+
+        <div class="profile-card">
+          <h3>Change Password</h3>
+          <div class="form-group" style="max-width:380px;margin-bottom:1rem">
+            <label for="secCurrentPwd" class="form-label">Current password</label>
+            <input type="password" id="secCurrentPwd" class="form-input" placeholder="••••••••">
+          </div>
+          <div class="form-group" style="max-width:380px;margin-bottom:1rem">
+            <label for="secNewPwd" class="form-label">New password</label>
+            <input type="password" id="secNewPwd" class="form-input" placeholder="Min. 8 characters">
+          </div>
+          <div class="form-group" style="max-width:380px;margin-bottom:1.5rem">
+            <label for="secConfirmPwd" class="form-label">Confirm new password</label>
+            <input type="password" id="secConfirmPwd" class="form-input" placeholder="Repeat new password">
+          </div>
+          <button class="btn btn-primary" id="changePasswordBtn">Update Password</button>
+        </div>
+
+        <div class="profile-card">
+          <h3>Active Sessions</h3>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border)">
+            <div>
+              <div style="font-size:.9rem;color:var(--text-1);font-weight:500">This device</div>
+              <div style="font-size:.78rem;color:var(--text-2);margin-top:.2rem">Browser · Signed in now</div>
+            </div>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div style="margin-top:1rem">
+            <button class="btn btn-secondary btn-sm"
+                    onclick="showToast('All other sessions ended','success')">
+              Sign out other devices
+            </button>
+          </div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="profile-card" style="border-color:rgba(239,68,68,.2)">
+          <h3 style="color:#ef4444">Danger Zone</h3>
+          <p style="font-size:.88rem;color:var(--text-2);margin-bottom:1rem">
+            Permanently delete your Volthive account and all associated data. This action cannot be undone.
+          </p>
+          <button class="btn" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444"
+                  onclick="showToast('Please contact support to delete your account','info')">
+            Delete Account
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="index.html" class="footer__logo">
+          <div class="nav__logo-icon" style="width:32px;height:32px;font-size:1rem">⚡</div>
+          Volt<span>hive</span>
+        </a>
+        <p class="footer__tagline">Premium electronics & gadgets for the modern tech enthusiast.</p>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__heading">Shop</h4>
+        <ul class="footer__links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="products.html?cat=Audio">Audio</a></li>
+          <li><a href="products.html?cat=Laptops">Laptops</a></li>
+          <li><a href="products.html?cat=Tablets">Tablets</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__heading">Account</h4>
+        <ul class="footer__links">
+          <li><a href="profile.html">My Profile</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="login.html">Sign In</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2024 Volthive. Built with ⚡ by the Volthive team.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast container -->
+<div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/auth.js"></script>
+<script>
+// ── Extra profile page logic ─────────────────────────────
+(function () {
+  const user = JSON.parse(localStorage.getItem('volthive_user') || 'null');
+  if (!user) return; // auth.js's requireAuth() will redirect
+
+  // ── Populate stat counters ──────────────────────────────
+  const orders   = JSON.parse(localStorage.getItem(`volthive_orders_${user.id}`) || '[]');
+  const wishlist = JSON.parse(localStorage.getItem('volthive_wishlist') || '[]');
+  const cart     = JSON.parse(localStorage.getItem('volthive_cart') || '[]');
+
+  const setEl = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setEl('statOrders',   orders.length);
+  setEl('statWishlist', wishlist.length);
+  setEl('statCart',     cart.length);
+
+  // sidebar badges
+  setEl('ordersBadge',   orders.length);
+  setEl('wishlistBadge', wishlist.length);
+
+  // ── Render recent orders on Overview ───────────────────
+  const recentBody = document.getElementById('recentOrdersBody');
+  function buildOrderRow(order) {
+    return `
+      <tr>
+        <td><span style="color:var(--accent);font-weight:600">${order.id}</span></td>
+        <td>${order.date}</td>
+        <td>${order.items} item${order.items !== 1 ? 's' : ''}</td>
+        <td style="font-family:var(--font-display);font-weight:700">$${Number(order.total).toFixed(2)}</td>
+        <td><span class="badge badge-${order.status === 'Delivered' ? 'success' : 'warning'}">${order.status}</span></td>
+      </tr>`;
+  }
+  if (recentBody) {
+    if (orders.length === 0) {
+      recentBody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align:center;color:var(--text-2);padding:2rem">
+            No orders yet. <a href="products.html" style="color:var(--accent)">Start shopping!</a>
+          </td>
+        </tr>`;
+    } else {
+      recentBody.innerHTML = orders.slice(0, 5).map(buildOrderRow).join('');
+    }
+  }
+
+  // ── Wishlist tab ────────────────────────────────────────
+  const wishlistContent = document.getElementById('wishlistContent');
+  if (wishlistContent && wishlist.length > 0 && typeof PRODUCTS !== 'undefined') {
+    const wishlistProducts = PRODUCTS.filter(p => wishlist.includes(p.id));
+    if (wishlistProducts.length > 0) {
+      wishlistContent.innerHTML = `<div class="wishlist-grid">${wishlistProducts.map(p => buildProductCard(p)).join('')}</div>`;
+      document.querySelectorAll('.wishlist-grid .product-card').forEach(card => {
+        wireProductCardEvents(card);
+      });
+    }
+  }
+
+  // ── Sidebar keyboard navigation ─────────────────────────
+  document.querySelectorAll('.profile-nav__item').forEach(item => {
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') item.click();
+    });
+  });
+
+  // ── Logout ─────────────────────────────────────────────
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      if (typeof logout === 'function') {
+        logout();
+      } else {
+        localStorage.removeItem('volthive_user');
+        window.location.href = 'login.html';
+      }
+    });
+  }
+
+  // ── Change password (simulated) ────────────────────────
+  const changePwdBtn = document.getElementById('changePasswordBtn');
+  if (changePwdBtn) {
+    changePwdBtn.addEventListener('click', () => {
+      const curr    = document.getElementById('secCurrentPwd')?.value;
+      const newPwd  = document.getElementById('secNewPwd')?.value;
+      const confirm = document.getElementById('secConfirmPwd')?.value;
+      if (!curr || !newPwd || !confirm) {
+        showToast('Please fill in all password fields', 'error'); return;
+      }
+      if (newPwd.length < 8) {
+        showToast('New password must be at least 8 characters', 'error'); return;
+      }
+      if (newPwd !== confirm) {
+        showToast('Passwords do not match', 'error'); return;
+      }
+      showToast('Password updated successfully!', 'success');
+      document.getElementById('secCurrentPwd').value = '';
+      document.getElementById('secNewPwd').value     = '';
+      document.getElementById('secConfirmPwd').value = '';
+    });
+  }
+})();
+</script>
+</body>
+</html>
