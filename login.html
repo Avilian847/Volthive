@@ -229,10 +229,10 @@
 <nav class="nav" id="mainNav">
   <div class="container">
     <div class="nav__inner">
-      <a href="index.html" class="nav__logo">
+      <span class="nav__logo">
         <div class="nav__logo-icon">⚡</div>
         Volt<span>hive</span>
-      </a>
+      </span>
       <ul class="nav__links">
         <li><a href="index.html"    class="nav__link">Home</a></li>
         <li><a href="products.html" class="nav__link">Products</a></li>
@@ -312,11 +312,6 @@
       <p class="auth-sub">
         Don't have an account? <a href="register.html">Create one free →</a>
       </p>
-
-      <!-- Demo hint -->
-      <div class="auth-demo-hint">
-        💡 <span>Demo credentials: <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9df9f8f0f2ddebf2f1e9f5f4ebf8b3fef2f0">[email&#160;protected]</a></strong> / <strong>demo1234</strong></span>
-      </div>
 
       <!-- Login Form -->
       <form id="loginForm" novalidate>
@@ -409,3 +404,12 @@
       const isText = loginPwdInput.type === 'text';
       loginPwdInput.type = isText ? 'password' : 'text';
       loginPwdToggle.textContent = isText ? '👁️' : '🙈';
+    });
+  }
+
+  // ── Redirect already-logged-in users ─────────────────────
+  const currentUser = JSON.parse(localStorage.getItem('volthive_user') || 'null');
+  if (currentUser) window.location.href = 'profile.html';
+</script>
+</body>
+</html>

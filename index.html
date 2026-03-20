@@ -16,16 +16,15 @@
   <div class="container">
     <div class="nav__inner">
 
-      <!-- Logo -->
-      <a href="index.html" class="nav__logo">
+      <span class="nav__logo">
         <div class="nav__logo-icon">⚡</div>
         Volt<span>hive</span>
-      </a>
+      </span>
 
       <!-- Desktop Links -->
       <ul class="nav__links">
         <li><a href="index.html"    class="nav__link active">Home</a></li>
-        <li><a href="products.html" class="nav__link">All</a></li>
+        <li><a href="products.html" class="nav__link">Products</a></li>
         <li><a href="products.html?cat=Audio"    class="nav__link">Audio</a></li>
         <li><a href="products.html?cat=Laptops"  class="nav__link">Laptops</a></li>
         <li><a href="products.html?cat=Tablets"  class="nav__link">Tablets</a></li>
@@ -41,8 +40,7 @@
         </div>
         <!-- Dark Toggle -->
         <button id="darkToggle" class="dark-toggle" title="Toggle theme" aria-label="Toggle dark mode">☀️</button>
-        <!-- Wishlist -->
-        <a href="profile.html" class="nav__btn" title="Wishlist" aria-label="Wishlist">🤍</a>
+        
         <!-- Cart -->
         <a href="cart.html" class="nav__btn" title="Cart" aria-label="Cart">
           🛒
@@ -308,6 +306,7 @@
 
 <script src="js/products.js"></script>
 <script src="js/main.js"></script>
+<script src="js/auth.js"></script>
 <script>
   // ── Render Categories ──────────────────────────────────────
   const categoryMeta = {
@@ -315,7 +314,7 @@
     'Laptops':     { icon: '💻', count: 2 },
     'Tablets':     { icon: '📱', count: 2 },
     'Accessories': { icon: '🖱️', count: 3 },
-    'Drones':      { icon: '🚁', count: 1 },
+    'Drones':      { icon: '🛸', count: 1 },
     'Monitors':    { icon: '🖥️', count: 1 }
   };
 

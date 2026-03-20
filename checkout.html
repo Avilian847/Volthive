@@ -12,7 +12,7 @@
 <nav class="nav" id="mainNav">
   <div class="container">
     <div class="nav__inner">
-      <a href="index.html" class="nav__logo"><div class="nav__logo-icon">⚡</div>Volt<span>hive</span></a>
+      <span class="nav__logo"><div class="nav__logo-icon">⚡</div>Volt<span>hive</span></span>
       <div class="nav__actions">
         <button id="darkToggle" class="dark-toggle">☀️</button>
         <a href="cart.html" class="nav__btn">🛒<span class="nav__badge cart-badge" style="display:none">0</span></a>
@@ -332,20 +332,7 @@
     });
   }
 
-  // ── Payment method switching ──────────────────────────────
-  document.querySelectorAll('.payment-method').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.payment-method').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('cardFields')?.classList.add('hidden');
-      document.getElementById('paypalFields')?.classList.add('hidden');
-      document.getElementById('mpesaFields')?.classList.add('hidden');
-      const method = btn.dataset.method;
-      if (method === 'card')   document.getElementById('cardFields')?.classList.remove('hidden');
-      if (method === 'paypal') document.getElementById('paypalFields')?.classList.remove('hidden');
-      if (method === 'mpesa')  document.getElementById('mpesaFields')?.classList.remove('hidden');
-    });
-  });
+  
 </script>
 </body>
 </html>

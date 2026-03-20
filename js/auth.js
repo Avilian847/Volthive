@@ -213,10 +213,11 @@ if (registerForm) {
     e.preventDefault();
 
     let valid = true;
-    valid = validateField(nameInput, 'name') && valid;
     valid = validateField(emailInput, 'email') && valid;
     valid = validateField(passwordInput, 'password') && valid;
-    valid = validateField(confirmInput, 'confirmPassword', registerForm) && valid;
+    if (confirmInput) {
+      valid = validateField(confirmInput, 'confirmPassword', registerForm) && valid;
+    }
     if (!valid) return;
 
     // Check existing

@@ -23,6 +23,7 @@
   --text:       #e8eaf0;
   --text-2:     #8892a4;
   --text-3:     #4a5568;
+  --text-1:     #ffffff;
 
   --success:    #00e676;
   --warning:    #ffab00;
@@ -1667,6 +1668,7 @@ body.light-mode {
   --border:  #e2e5ec;
   --border-2:#d0d5df;
   --text:    #111827;
+  --text-1:  #111827;
   --text-2:  #6b7280;
   --text-3:  #9ca3af;
 }

@@ -263,10 +263,10 @@
     <div class="auth-panel__grid"></div>
     <div class="auth-panel__content">
 
-      <a href="index.html" class="auth-panel__logo">
-        <div class="auth-panel__logo-icon">⚡</div>
+      <span class="nav__logo">
+        <div class="nav__logo-icon">⚡</div>
         Volt<span>hive</span>
-      </a>
+      </span>
 
       <p class="auth-panel__tagline">
         Join the<br>
@@ -373,7 +373,7 @@
               style="padding-right:3rem"
               aria-describedby="registerPasswordError"
             >
-            <button type="button" id="regPwdToggle"
+            <button type="button" id="regPwdToggle" class="toggle-eye"
                     aria-label="Toggle password visibility"
                     style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-2);padding:0">
               👁️
@@ -403,7 +403,7 @@
               style="padding-right:3rem"
               aria-describedby="registerConfirmError"
             >
-            <button type="button" id="regConfirmToggle"
+            <button type="button" id="regConfirmToggle" class="toggle-eye"
                     aria-label="Toggle password visibility"
                     style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-2);padding:0">
               👁️
@@ -467,6 +467,7 @@
   }
 
   registerForm.addEventListener('submit', (e) => {
+    syncFullName();  
     const v1 = validateSplit(firstInput, 'registerFirstNameError', 'First name');
     const v2 = validateSplit(lastInput,  'registerLastNameError',  'Last name');
     if (!v1 || !v2) e.preventDefault();

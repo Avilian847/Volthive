@@ -13,7 +13,7 @@
 <nav class="nav" id="mainNav">
   <div class="container">
     <div class="nav__inner">
-      <a href="index.html" class="nav__logo"><div class="nav__logo-icon">⚡</div>Volt<span>hive</span></a>
+      <span class="nav__logo"><div class="nav__logo-icon">⚡</div>Volt<span>hive</span></span>
       <ul class="nav__links">
         <li><a href="index.html"    class="nav__link">Home</a></li>
         <li><a href="products.html" class="nav__link active">All</a></li>
@@ -33,7 +33,7 @@
 </nav>
 <div id="mobileNav" class="nav__mobile">
   <a href="index.html"    class="nav__mobile-link">🏠 Home</a>
-  <a href="products.html" class="nav__mobile-link">📦 All</a>
+  <a href="products.html" class="nav__mobile-link">📦 Products</a>
   <a href="cart.html"     class="nav__mobile-link">🛒 Cart</a>
   <a href="login.html"    class="nav__mobile-link">👤 Account</a>
 </div>
@@ -302,21 +302,13 @@
     document.getElementById('descText').textContent = product.desc;
 
     // ── Reviews tab ───────────────────────────────────────
-    const mockReviews = [
-      { name: 'Alex M.', rating: 5, date: 'Nov 2024', text: 'Absolutely love this product! The quality is outstanding and it arrived in perfect condition. Would definitely recommend.' },
-      { name: 'Sarah K.', rating: 5, date: 'Oct 2024', text: 'Exceeded my expectations. Great build quality, fast delivery, and the performance is top notch.' },
-      { name: 'James R.', rating: 4, date: 'Oct 2024', text: 'Really good product overall. A few minor quirks but nothing that impacts the experience significantly.' },
-    ];
-    document.getElementById('reviewsList').innerHTML = mockReviews.map(r => `
-      <div class="review-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
-          <span class="review-author">${r.name}</span>
-          <span style="color:var(--text-3);font-size:0.78rem">${r.date}</span>
-        </div>
-        <div style="color:var(--warning);margin-bottom:0.5rem">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-        <p style="color:var(--text-2);font-size:0.875rem">${r.text}</p>
+    document.getElementById('reviewsList').innerHTML = `
+      <div style="text-align:center;padding:3rem 1rem;color:var(--text-2)">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem">💬</div>
+        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:0.5rem;color:var(--text)">No reviews yet</h3>
+        <p style="font-size:0.875rem">Be the first to review this product.</p>
       </div>
-    `).join('');
+    `;
 
     // ── Related products ──────────────────────────────────
     const related = PRODUCTS
