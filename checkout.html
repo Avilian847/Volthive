@@ -275,32 +275,52 @@
   </div>
 </footer>
 
-<script src="js/api.js"></script>
-<script src="js/products.js"></script>
-<script src="js/main.js"></script>
-<script src="js/cart.js"></script>
-</body>
-</html>
-<script src="js/products.js"></script>
 <script src="js/main.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
 <script>
-  // ── Pre-fill summary from localStorage ──────────────────
-  const summary = JSON.parse(localStorage.getItem('volthive_checkout_summary') || '{}');
-  const cart    = getCart();
+(async function() {
+  // ── Redirect if not logged in ─────────────────────────
+  const user = getCurrentUser();
+  if (!user) {
+    localStorage.setItem('volthive_redirect', 'checkout.html');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // ── Load cart items ───────────────────────────────────
+  const cart = await getCartItems();
 
   if (cart.length === 0) {
     showToast('Your cart is empty', 'error');
     setTimeout(() => window.location.href = 'cart.html', 1500);
+    return;
   }
 
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set('co-subtotal', formatPrice(summary.subtotal || 0));
-  set('co-shipping',  summary.shipping === 0 ? 'FREE' : formatPrice(summary.shipping || 0));
-  set('co-tax',       formatPrice(summary.tax || 0));
-  set('co-total',     formatPrice(summary.total || 0));
+  // ── Calculate summary ─────────────────────────────────
+  const SHIPPING_THRESHOLD = 75;
+  const SHIPPING_COST = 9.99;
+  const TAX_RATE = 0.08;
 
-  // Items preview
+  const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const tax      = subtotal * TAX_RATE;
+  const total    = subtotal + shipping + tax;
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('co-subtotal', formatPrice(subtotal));
+  set('co-shipping', shipping === 0 ? 'FREE' : formatPrice(shipping));
+  set('co-tax',      formatPrice(tax));
+  set('co-total',    formatPrice(total));
+
+  // Save summary for confirmation page
+  localStorage.setItem('volthive_checkout_summary', JSON.stringify({
+    subtotal, shipping, tax, total, items: cart.length
+  }));
+
+  // ── Items preview ─────────────────────────────────────
   const itemsList = document.getElementById('checkoutItemsList');
   if (itemsList) {
     itemsList.innerHTML = cart.slice(0, 3).map(item => `
@@ -320,7 +340,7 @@
     }
   }
 
-  // ── Card number formatting ────────────────────────────────
+  // ── Card number formatting ────────────────────────────
   const cardInput = document.getElementById('cardNumber');
   if (cardInput) {
     cardInput.addEventListener('input', () => {
@@ -338,7 +358,79 @@
     });
   }
 
-  
+  // ── Place order on form submit ────────────────────────
+  const checkoutForm = document.getElementById('checkoutForm');
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const placeBtn = document.getElementById('placeOrderBtn');
+      if (placeBtn) {
+        placeBtn.disabled = true;
+        placeBtn.textContent = 'Processing...';
+      }
+
+      try {
+        const firstName = document.getElementById('checkoutFirstName')?.value || '';
+        const lastName  = document.getElementById('checkoutLastName')?.value  || '';
+        const email     = document.getElementById('checkoutEmail')?.value     || user.email;
+        const phone     = document.getElementById('checkoutPhone')?.value     || '';
+
+        const items = cart.map(item => ({
+          product_id: item.id,
+          quantity:   item.qty,
+          price:      item.price
+        }));
+
+        // Place order
+        const data = await apiFetch('/orders', {
+          method: 'POST',
+          body: JSON.stringify({
+            name:  `${firstName} ${lastName}`.trim(),
+            email,
+            total,
+            items
+          })
+        });
+
+        // Trigger M-Pesa STK Push if phone provided
+        if (phone) {
+          try {
+            await apiFetch('/orders/mpesa/stk', {
+              method: 'POST',
+              body: JSON.stringify({
+                phone,
+                amount: Math.ceil(total),
+                orderId: data.order.id
+              })
+            });
+            showToast('Check your phone for M-Pesa PIN prompt 📱', 'info');
+          } catch (mpesaErr) {
+            console.warn('M-Pesa STK failed:', mpesaErr.message);
+          }
+        }
+
+        // Save for confirmation page
+        localStorage.setItem('volthive_last_order', JSON.stringify({
+          orderId: `VH-${data.order.id}`,
+          email:   data.order.email,
+          name:    data.order.name,
+          total:   data.order.total
+        }));
+
+        window.location.href = 'confirmation.html';
+
+      } catch (err) {
+        showToast(err.message || 'Order failed. Please try again.', 'error');
+        if (placeBtn) {
+          placeBtn.disabled = false;
+          placeBtn.textContent = 'Place Order';
+        }
+      }
+    });
+  }
+
+})();
 </script>
 </body>
 </html>

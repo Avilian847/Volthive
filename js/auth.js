@@ -171,7 +171,8 @@
    if (registerForm) {
      attachLiveValidation(registerForm);
    
-     const nameInput     = document.getElementById('registerName');
+     const firstNameInput = document.getElementById('registerFirstName');
+     const lastNameInput  = document.getElementById('registerLastName');
      const emailInput    = document.getElementById('registerEmail');
      const passwordInput = document.getElementById('registerPassword');
      const confirmInput  = document.getElementById('confirmPassword');
@@ -181,7 +182,8 @@
        e.preventDefault();
    
        let valid = true;
-       valid = validateField(nameInput, 'name') && valid;
+       valid = validateField(firstNameInput, 'name') && valid;
+       valid = validateField(lastNameInput, 'name') && valid;
        valid = validateField(emailInput, 'email') && valid;
        valid = validateField(passwordInput, 'password') && valid;
        if (confirmInput) {
@@ -196,7 +198,7 @@
          const data = await apiFetch('/auth/register', {
            method: 'POST',
            body: JSON.stringify({
-             name: nameInput.value.trim(),
+            name: `${firstNameInput.value.trim()} ${lastNameInput.value.trim()}`,
              email: emailInput.value.trim(),
              password: passwordInput.value
            })

@@ -14,17 +14,20 @@
      };
    }
    
-   // ── API fetch helper ──────────────────────────────────────────
    async function apiFetch(endpoint, options = {}) {
-     try {
-       const res = await fetch(`${API}${endpoint}`, {
-         headers: authHeaders(),
-         ...options
-       });
-       const data = await res.json();
-       if (!res.ok) throw new Error(data.error || 'Request failed');
-       return data;
-     } catch (err) {
-       throw err;
-     }
-   }
+    try {
+      const res = await fetch(`${API}${endpoint}`, {
+        ...options,
+        headers: {
+          ...authHeaders(),
+          ...(options.headers || {})
+        }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  }
+   

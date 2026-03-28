@@ -102,8 +102,8 @@
          const id = parseInt(btn.dataset.id);
          const product = getProductById(id);
          if (product) {
-           addToCart({ ...product, qty: 1 });
-         }
+          addToCartSmart({ ...product, qty: 1 }); 
+          }
        });
      });
    

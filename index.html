@@ -302,24 +302,20 @@
   </div>
 </footer>
 
-<script src="js/api.js"></script>
-<script src="js/products.js"></script>
-<script src="js/main.js"></script>
-<script src="js/cart.js"></script>
-</body>
-</html>
-<script src="js/products.js"></script>
 <script src="js/main.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
 <script>
   // ── Render Categories ──────────────────────────────────────
   const categoryMeta = {
-    'Audio':       { icon: '🎧', count: 3 },
-    'Laptops':     { icon: '💻', count: 2 },
-    'Tablets':     { icon: '📱', count: 2 },
-    'Accessories': { icon: '🖱️', count: 3 },
-    'Drones':      { icon: '🛸', count: 1 },
-    'Monitors':    { icon: '🖥️', count: 1 }
+    'Audio':       { icon: '🎧' },
+    'Laptops':     { icon: '💻' },
+    'Tablets':     { icon: '📱' },
+    'Accessories': { icon: '🖱️' },
+    'Drones':      { icon: '🛸' },
+    'Monitors':    { icon: '🖥️' }
   };
 
   const catGrid = document.getElementById('categoriesGrid');
@@ -328,16 +324,19 @@
       <a href="products.html?cat=${name}" class="category-card">
         <div class="category-card__icon">${meta.icon}</div>
         <div class="category-card__name">${name}</div>
-        <div class="category-card__count">${meta.count} products</div>
       </a>
     `).join('');
   }
 
-  // ── Render Featured Products ───────────────────────────────
-  renderProductGrid('featuredGrid', FEATURED_PRODUCTS);
+  // ── Load products from API ─────────────────────────────────
+  fetchProducts().then(products => {
+    // Featured — first 4 products
+    renderProductGrid('featuredGrid', products.slice(0, 4));
 
-  // ── Render Deal Products ───────────────────────────────────
-  renderProductGrid('dealsGrid', DEAL_PRODUCTS);
+    // Deals — products with old_price
+    const deals = products.filter(p => p.old_price);
+    renderProductGrid('dealsGrid', deals.slice(0, 4));
+  });
 
   // ── Start countdown ────────────────────────────────────────
   startCountdown(10);

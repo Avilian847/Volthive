@@ -649,75 +649,69 @@
 
 <!-- Toast container -->
 <div id="toastContainer" class="toast-container" aria-live="polite"></div>
-
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/api.js"></script>
 <script src="js/products.js"></script>
-<script src="js/main.js"></script>
 <script src="js/cart.js"></script>
-</body>
-</html>
-<script src="js/main.js"></script>
-<script src="js/products.js"></script>
-<script src="js/auth.js"></script>
 <script>
-// ── Extra profile page logic ─────────────────────────────
-(function () {
-  const user = JSON.parse(localStorage.getItem('volthive_user') || 'null');
-  if (!user) return; // auth.js's requireAuth() will redirect
-
-  // ── Populate stat counters ──────────────────────────────
-  const orders   = JSON.parse(localStorage.getItem(`volthive_orders_${user.id}`) || '[]');
-  const wishlist = JSON.parse(localStorage.getItem('volthive_wishlist') || '[]');
-  const cart     = JSON.parse(localStorage.getItem('volthive_cart') || '[]');
+(async function () {
+  const user = getCurrentUser();
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
 
   const setEl = (id, val) => {
     const el = document.getElementById(id);
     if (el) el.textContent = val;
   };
 
-  setEl('statOrders',   orders.length);
+  // ── Wishlist and cart stats (still localStorage) ────────
+  const wishlist = JSON.parse(localStorage.getItem('volthive_wishlist') || '[]');
+  const cart     = JSON.parse(localStorage.getItem('volthive_cart') || '[]');
   setEl('statWishlist', wishlist.length);
   setEl('statCart',     cart.length);
-
-  // sidebar badges
-  setEl('ordersBadge',   orders.length);
   setEl('wishlistBadge', wishlist.length);
 
-  // ── Render recent orders on Overview ───────────────────
-  const recentBody = document.getElementById('recentOrdersBody');
-  function buildOrderRow(order) {
-    return `
-      <tr>
-        <td><span style="color:var(--accent);font-weight:600">${order.id}</span></td>
-        <td>${order.date}</td>
-        <td>${order.items} item${order.items !== 1 ? 's' : ''}</td>
-        <td style="font-family:var(--font-display);font-weight:700">$${Number(order.total).toFixed(2)}</td>
-        <td><span class="badge badge-${order.status === 'Delivered' ? 'success' : 'warning'}">${order.status}</span></td>
-      </tr>`;
-  }
-  if (recentBody) {
-    if (orders.length === 0) {
-      recentBody.innerHTML = `
-        <tr>
-          <td colspan="5" style="text-align:center;color:var(--text-2);padding:2rem">
-            No orders yet. <a href="products.html" style="color:var(--accent)">Start shopping!</a>
-          </td>
-        </tr>`;
-    } else {
-      recentBody.innerHTML = orders.slice(0, 5).map(buildOrderRow).join('');
-    }
-  }
+  // ── Load orders from API ────────────────────────────────
+  try {
+    const orders = await apiFetch('/orders');
 
-  // ── Wishlist tab ────────────────────────────────────────
-  const wishlistContent = document.getElementById('wishlistContent');
-  if (wishlistContent && wishlist.length > 0 && typeof PRODUCTS !== 'undefined') {
-    const wishlistProducts = PRODUCTS.filter(p => wishlist.includes(p.id));
-    if (wishlistProducts.length > 0) {
-      wishlistContent.innerHTML = `<div class="wishlist-grid">${wishlistProducts.map(p => buildProductCard(p)).join('')}</div>`;
-      document.querySelectorAll('.wishlist-grid .product-card').forEach(card => {
-        wireProductCardEvents(card);
-      });
+    setEl('statOrders',  orders.length);
+    setEl('ordersBadge', orders.length);
+
+    function buildOrderRow(order) {
+      return `
+        <tr>
+          <td><span style="color:var(--accent);font-weight:600">VH-${order.id}</span></td>
+          <td>${new Date(order.created_at).toLocaleDateString()}</td>
+          <td>${order.items.length} item${order.items.length !== 1 ? 's' : ''}</td>
+          <td style="font-family:var(--font-display);font-weight:700">${formatPrice(parseFloat(order.total))}</td>
+          <td><span class="badge badge-${order.status === 'Delivered' ? 'success' : 'warning'}">${order.status}</span></td>
+        </tr>`;
     }
+
+    const recentBody = document.getElementById('recentOrdersBody');
+    if (recentBody) {
+      recentBody.innerHTML = orders.length === 0
+        ? `<tr><td colspan="5" style="text-align:center;color:var(--text-2);padding:2rem">
+            No orders yet. <a href="products.html" style="color:var(--accent)">Start shopping!</a>
+           </td></tr>`
+        : orders.slice(0, 5).map(buildOrderRow).join('');
+    }
+
+    const ordersTableBody = document.getElementById('ordersTableBody');
+    if (ordersTableBody) {
+      ordersTableBody.innerHTML = orders.length === 0
+        ? `<tr><td colspan="5" style="text-align:center;color:var(--text-2);padding:2rem">
+            No orders yet. <a href="products.html" style="color:var(--accent)">Start shopping!</a>
+           </td></tr>`
+        : orders.map(buildOrderRow).join('');
+    }
+
+  } catch (err) {
+    console.error('Failed to load orders:', err.message);
   }
 
   // ── Sidebar keyboard navigation ─────────────────────────
@@ -730,14 +724,7 @@
   // ── Logout ─────────────────────────────────────────────
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      if (typeof logout === 'function') {
-        logout();
-      } else {
-        localStorage.removeItem('volthive_user');
-        window.location.href = 'login.html';
-      }
-    });
+    logoutBtn.addEventListener('click', () => logout());
   }
 
   // ── Change password (simulated) ────────────────────────
