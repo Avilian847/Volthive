@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse all electronics and gadgets at Volthive. Filter by category, price and rating.">
+  <title>Products — Volthive</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav__inner">
+      <span class="nav__logo"><div class="nav__logo-icon">⚡</div>Volt<span>hive</span></span>
+      <ul class="nav__links">
+        <li><a href="index.html"    class="nav__link">Home</a></li>
+        <li><a href="Products.html" class="nav__link active">Products</a></li>
+        <li><a href="products.html?cat=Audio"   class="nav__link">Audio</a></li>
+        <li><a href="products.html?cat=Laptops" class="nav__link">Laptops</a></li>
+        <li><a href="products.html?cat=Tablets" class="nav__link">Tablets</a></li>
+      </ul>
+      <div class="nav__actions">
+        <div class="nav__search">
+          <span class="nav__search-icon">🔍</span>
+          <input id="navSearch" type="search" class="nav__search-input" placeholder="Search gadgets...">
+        </div>
+        <button id="darkToggle" class="dark-toggle" title="Toggle theme">☀️</button>
+        <a href="cart.html" class="nav__btn">🛒<span class="nav__badge cart-badge" style="display:none">0</span></a>
+        <button id="profileBtn" class="nav__btn">👤</button>
+        <button id="hamburger" class="nav__hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="mobileNav" class="nav__mobile">
+  <a href="index.html"    class="nav__mobile-link">🏠 Home</a>
+  <a href="products.html" class="nav__mobile-link">📦 Products</a>
+  <a href="cart.html"     class="nav__mobile-link">🛒 Cart</a>
+  <a href="login.html"    class="nav__mobile-link">👤 Account</a>
+</div>
+
+<main class="page-wrap section">
+  <div class="container">
+
+    <!-- Page header -->
+    <div class="section-header" style="margin-bottom:1.5rem">
+      <div class="section-header__eyebrow">Explore</div>
+      <h1 class="section-header__title" id="pageHeading">All <em>Products</em></h1>
+    </div>
+
+    <div class="products-layout">
+
+      <!-- ── Filters Panel ─────────────────────────── -->
+      <aside class="filters-panel" id="filtersPanel">
+        <div class="filters-panel__title">
+          Filters
+          <button id="clearFilters" class="btn btn-ghost btn-sm">Clear all</button>
+        </div>
+
+        <!-- Categories -->
+        <div class="filter-section">
+          <div class="filter-section__title">Category</div>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="all" id="catAll" checked> All Categories
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="Audio"> 🎧 Audio
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="Laptops"> 💻 Laptops
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="Tablets"> 📱 Tablets
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="Accessories"> 🖱️ Accessories
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="Drones"> 🛸 Drones
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="cat" value="Monitors"> 🖥️ Monitors
+          </label>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-section">
+          <div class="filter-section__title">Price Range</div>
+          <div class="price-range">
+            <input type="range" id="priceRange" min="0" max="2000" value="2000" step="10">
+            <div class="price-range__labels">
+              <span>$0</span>
+              <span id="priceRangeVal">Up to $2,000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-section">
+          <div class="filter-section__title">Min Rating</div>
+          <label class="filter-option">
+            <input type="radio" name="rating" value="0" checked> All ratings
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="rating" value="4.5"> ★ 4.5+
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="rating" value="4"> ★ 4.0+
+          </label>
+          <label class="filter-option">
+            <input type="radio" name="rating" value="3"> ★ 3.0+
+          </label>
+        </div>
+
+        <!-- In Stock -->
+        <div class="filter-section">
+          <div class="filter-section__title">Availability</div>
+          <label class="filter-option">
+            <input type="checkbox" id="inStockOnly"> In stock only
+          </label>
+        </div>
+
+      </aside>
+
+      <!-- ── Main Content ───────────────────────────── -->
+      <div>
+        <!-- Toolbar -->
+        <div class="products-toolbar">
+          <div class="products-toolbar__left">
+            <span class="products-count" id="productsCount">Showing 12 products</span>
+            <select id="sortSelect" class="products-sort" aria-label="Sort products">
+              <option value="">Sort: Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
+          <div class="view-toggle">
+            <button class="view-toggle__btn active" id="gridView" title="Grid view" aria-label="Grid view">⊞</button>
+            <button class="view-toggle__btn" id="listView" title="List view" aria-label="List view">☰</button>
+          </div>
+        </div>
+
+        <!-- Search bar (desktop inline) -->
+        <div style="margin-bottom:1.25rem">
+          <input type="search"
+                 id="productSearch"
+                 class="form-input"
+                 placeholder="🔍  Search within products..."
+                 aria-label="Search products">
+        </div>
+
+        <!-- Active filter tags -->
+        <div id="activeFilters" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem"></div>
+
+        <!-- Product Grid -->
+        <div class="product-grid" id="productsGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="noResults" class="hidden" style="text-align:center;padding:4rem 2rem;color:var(--text-2)">
+          <div style="font-size:3rem;margin-bottom:1rem">😶</div>
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.5rem">No products found</h3>
+          <p>Try adjusting your filters or search query.</p>
+          <button id="resetFiltersBtn" class="btn btn-secondary mt-3">Reset Filters</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__brand-name">Volt<span>hive</span></div>
+        <p class="footer__tagline">Premium electronics & gadgets store.</p>
+        <div class="footer__socials">
+          <a href="#" class="footer__social">𝕏</a>
+          <a href="#" class="footer__social">📷</a>
+          <a href="#" class="footer__social">▶️</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-title">Shop</div>
+        <ul class="footer__links">
+          <li><a href="products.html" class="footer__link">All Products</a></li>
+          <li><a href="products.html?sort=sale" class="footer__link">Deals</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Account</div>
+        <ul class="footer__links">
+          <li><a href="login.html"    class="footer__link">Login</a></li>
+          <li><a href="register.html" class="footer__link">Register</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer__col-title">Support</div>
+        <ul class="footer__links">
+          <li><a href="#" class="footer__link">Help Centre</a></li>
+          <li><a href="#" class="footer__link">Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2024 Volthive.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── State ─────────────────────────────────────────────────
+  let activeFilters = {
+    search: '',
+    category: 'all',
+    maxPrice: 2000,
+    minRating: 0,
+    inStock: false,
+    sort: ''
+  };
+
+  // ── Apply filters on loaded products ──────────────────────
+  function applyFilters() {
+    let result = [...PRODUCTS];
+
+    if (activeFilters.search) {
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(activeFilters.search.toLowerCase())
+      );
+    }
+
+    if (activeFilters.category !== 'all') {
+      result = result.filter(p => p.category === activeFilters.category);
+    }
+
+    if (activeFilters.maxPrice < 2000) {
+      result = result.filter(p => parseFloat(p.price) <= activeFilters.maxPrice);
+    }
+
+    if (activeFilters.minRating > 0) {
+      result = result.filter(p => parseFloat(p.rating) >= activeFilters.minRating);
+    }
+
+    if (activeFilters.inStock) {
+      result = result.filter(p => p.stock > 0);
+    }
+
+    if (activeFilters.sort === 'price_asc')  result.sort((a,b) => a.price - b.price);
+    if (activeFilters.sort === 'price_desc') result.sort((a,b) => b.price - a.price);
+    if (activeFilters.sort === 'rating')     result.sort((a,b) => b.rating - a.rating);
+
+    const grid    = document.getElementById('productsGrid');
+    const noRes   = document.getElementById('noResults');
+    const countEl = document.getElementById('productsCount');
+
+    if (result.length === 0) {
+      grid.innerHTML = '';
+      if (noRes) noRes.classList.remove('hidden');
+    } else {
+      if (noRes) noRes.classList.add('hidden');
+      renderProductGrid('productsGrid', result);
+    }
+
+    if (countEl) countEl.textContent = `Showing ${result.length} product${result.length !== 1 ? 's' : ''}`;
+    renderActiveTags();
+  }
+
+  // ── Active filter tags ─────────────────────────────────────
+  function renderActiveTags() {
+    const container = document.getElementById('activeFilters');
+    if (!container) return;
+    const tags = [];
+
+    if (activeFilters.category !== 'all') tags.push({ label: activeFilters.category, clear: () => { activeFilters.category = 'all'; document.getElementById('catAll').checked = true; applyFilters(); } });
+    if (activeFilters.search)             tags.push({ label: `"${activeFilters.search}"`, clear: () => { activeFilters.search = ''; document.getElementById('productSearch').value = ''; applyFilters(); } });
+    if (activeFilters.maxPrice < 2000)    tags.push({ label: `≤ $${activeFilters.maxPrice}`, clear: () => { activeFilters.maxPrice = 2000; document.getElementById('priceRange').value = 2000; applyFilters(); } });
+    if (activeFilters.minRating > 0)      tags.push({ label: `★ ${activeFilters.minRating}+`, clear: () => { activeFilters.minRating = 0; document.querySelector('input[name="rating"][value="0"]').checked = true; applyFilters(); } });
+
+    container.innerHTML = tags.map((t, i) => `
+      <span class="badge badge-accent" style="cursor:pointer;gap:0.4rem">
+        ${t.label} <span class="clear-tag" data-idx="${i}" style="font-size:0.85rem">✕</span>
+      </span>
+    `).join('');
+
+    container.querySelectorAll('.clear-tag').forEach(el => {
+      el.addEventListener('click', () => tags[parseInt(el.dataset.idx)].clear());
+    });
+  }
+
+  // ── Event Listeners ────────────────────────────────────────
+  document.querySelectorAll('input[name="cat"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      activeFilters.category = radio.value;
+      applyFilters();
+    });
+  });
+
+  const priceRange = document.getElementById('priceRange');
+  if (priceRange) {
+    priceRange.addEventListener('input', () => {
+      activeFilters.maxPrice = parseInt(priceRange.value);
+      document.getElementById('priceRangeVal').textContent =
+        activeFilters.maxPrice >= 2000 ? 'Any price' : `Up to $${activeFilters.maxPrice.toLocaleString()}`;
+      applyFilters();
+    });
+  }
+
+  document.querySelectorAll('input[name="rating"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      activeFilters.minRating = parseFloat(radio.value);
+      applyFilters();
+    });
+  });
+
+  document.getElementById('inStockOnly')?.addEventListener('change', e => {
+    activeFilters.inStock = e.target.checked;
+    applyFilters();
+  });
+
+  document.getElementById('sortSelect')?.addEventListener('change', e => {
+    activeFilters.sort = e.target.value;
+    applyFilters();
+  });
+
+  let searchTimeout;
+  document.getElementById('productSearch')?.addEventListener('input', e => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      activeFilters.search = e.target.value.trim();
+      applyFilters();
+    }, 250);
+  });
+
+  document.getElementById('clearFilters')?.addEventListener('click', () => {
+    activeFilters = { search: '', category: 'all', maxPrice: 2000, minRating: 0, inStock: false, sort: '' };
+    document.getElementById('catAll').checked = true;
+    document.getElementById('priceRange').value = 2000;
+    document.getElementById('priceRangeVal').textContent = 'Up to $2,000';
+    document.querySelector('input[name="rating"][value="0"]').checked = true;
+    document.getElementById('inStockOnly').checked = false;
+    document.getElementById('sortSelect').value = '';
+    document.getElementById('productSearch').value = '';
+    applyFilters();
+  });
+
+  document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
+    document.getElementById('clearFilters').click();
+  });
+
+  document.getElementById('gridView')?.addEventListener('click', () => {
+    document.getElementById('productsGrid').className = 'product-grid';
+    document.getElementById('gridView').classList.add('active');
+    document.getElementById('listView').classList.remove('active');
+  });
+
+  document.getElementById('listView')?.addEventListener('click', () => {
+    document.getElementById('productsGrid').className = 'product-grid';
+    document.getElementById('productsGrid').style.gridTemplateColumns = '1fr';
+    document.getElementById('listView').classList.add('active');
+    document.getElementById('gridView').classList.remove('active');
+  });
+
+  // ── Read URL params ───────────────────────────────────────
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('cat')) { activeFilters.category = urlParams.get('cat'); }
+  if (urlParams.get('q'))   { activeFilters.search = urlParams.get('q'); }
+  if (urlParams.get('sort')) { activeFilters.sort = urlParams.get('sort'); }
+
+</script>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+  // ── Load products from API then apply filters ─────────────
+  fetchProducts().then(() => {
+    applyFilters();
+  });
+</script>
+</body>
+</html>

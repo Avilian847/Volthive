@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to your Volthive account and access your orders, wishlist, and profile.">
+  <title>Login — Volthive</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Auth Page Layout ───────────────────────────────── */
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left panel — branding */
+    .auth-panel {
+      background: var(--bg-2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 30% 40%, rgba(0,212,255,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 70% 70%, rgba(123,92,255,.06) 0%, transparent 70%);
+    }
+    .auth-panel__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .auth-panel__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 360px;
+    }
+    .auth-panel__logo {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-1);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 2.5rem;
+    }
+    .auth-panel__logo span { color: var(--accent); }
+    .auth-panel__logo-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-gradient);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(0,212,255,.4);
+    }
+    .auth-panel__tagline {
+      font-size: 1.7rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .auth-panel__tagline .line-accent {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .auth-panel__sub {
+      color: var(--text-2);
+      font-size: .95rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+    .auth-panel__perks {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      text-align: left;
+    }
+    .auth-perk {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .9rem;
+      color: var(--text-2);
+    }
+    .auth-perk__icon {
+      width: 32px; height: 32px;
+      background: rgba(0,212,255,.08);
+      border: 1px solid rgba(0,212,255,.15);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    /* Right panel — form */
+    .auth-form-panel {
+      background: var(--bg-1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+    .auth-form-wrap h1 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: .5rem;
+    }
+    .auth-form-wrap .auth-sub {
+      color: var(--text-2);
+      font-size: .9rem;
+      margin-bottom: 2rem;
+    }
+    .auth-form-wrap .auth-sub a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .auth-form-wrap .auth-sub a:hover { text-decoration: underline; }
+
+    /* Demo hint */
+    .auth-demo-hint {
+      background: rgba(0,212,255,.06);
+      border: 1px solid rgba(0,212,255,.15);
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      font-size: .82rem;
+      color: var(--text-2);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+    }
+    .auth-demo-hint strong { color: var(--accent); }
+
+    /* Divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.25rem 0;
+      font-size: .8rem;
+      color: var(--text-3);
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Forgot password link */
+    .auth-forgot {
+      text-align: right;
+      font-size: .82rem;
+      margin-top: -.5rem;
+      margin-bottom: 1rem;
+    }
+    .auth-forgot a {
+      color: var(--text-2);
+      text-decoration: none;
+    }
+    .auth-forgot a:hover { color: var(--accent); }
+
+    /* Submit spinner */
+    .btn-spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      margin-left: .5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn--loading .btn-spinner { display: inline-block; }
+    .btn--loading .btn-label   { opacity: .7; }
+
+    /* Back to store link */
+    .auth-back {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: .85rem;
+      color: var(--text-2);
+    }
+    .auth-back a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .auth-back a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-panel { display: none; }
+      .auth-form-panel { padding: 2rem 1.5rem; justify-content: flex-start; padding-top: 6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<nav class="nav" id="mainNav">
+  <div class="container">
+    <div class="nav__inner">
+      <span class="nav__logo">
+        <div class="nav__logo-icon">⚡</div>
+        Volt<span>hive</span>
+      </span>
+      <ul class="nav__links">
+        <li><a href="index.html"    class="nav__link">Home</a></li>
+        <li><a href="products.html" class="nav__link">Products</a></li>
+      </ul>
+      <div class="nav__actions">
+        <button id="darkToggle" class="dark-toggle" title="Toggle theme" aria-label="Toggle dark mode">☀️</button>
+        <a href="cart.html" class="nav__btn" title="Cart" aria-label="Cart">
+          🛒
+          <span class="nav__badge cart-badge" style="display:none">0</span>
+        </a>
+        <button id="hamburger" class="nav__hamburger" aria-label="Toggle mobile menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div id="mobileNav" class="nav__mobile" role="dialog" aria-label="Mobile navigation">
+  <a href="index.html"    class="nav__mobile-link">🏠 Home</a>
+  <a href="products.html" class="nav__mobile-link">📦 Products</a>
+  <a href="cart.html"     class="nav__mobile-link">🛒 Cart</a>
+  <a href="login.html"    class="nav__mobile-link">👤 Account</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUTH PAGE
+════════════════════════════════════════════ -->
+<main class="auth-page">
+
+  <!-- Left: Branding panel -->
+  <div class="auth-panel">
+    <div class="auth-panel__grid"></div>
+    <div class="auth-panel__content">
+
+      <a href="index.html" class="auth-panel__logo">
+        <div class="auth-panel__logo-icon">⚡</div>
+        Volt<span>hive</span>
+      </a>
+
+      <p class="auth-panel__tagline">
+        Your tech journey<br>
+        <span class="line-accent">starts here</span>
+      </p>
+      <p class="auth-panel__sub">
+        Sign in to access your orders, saved wishlist, and a personalised shopping experience.
+      </p>
+
+      <div class="auth-panel__perks">
+        <div class="auth-perk">
+          <div class="auth-perk__icon">📦</div>
+          <span>Track all your orders in one place</span>
+        </div>
+        <div class="auth-perk">
+          <div class="auth-perk__icon">🤍</div>
+          <span>Save products to your wishlist</span>
+        </div>
+        <div class="auth-perk">
+          <div class="auth-perk__icon">⚡</div>
+          <span>Faster checkout with saved details</span>
+        </div>
+        <div class="auth-perk">
+          <div class="auth-perk__icon">🔔</div>
+          <span>Get notified on deals & new arrivals</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right: Login form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-wrap">
+
+      <h1>Welcome back</h1>
+      <p class="auth-sub">
+        Don't have an account? <a href="register.html">Create one free →</a>
+      </p>
+
+      <!-- Login Form -->
+      <form id="loginForm" novalidate>
+
+        <div class="form-group">
+          <label for="loginEmail" class="form-label">Email address</label>
+          <input
+            type="email"
+            id="loginEmail"
+            name="email"
+            class="form-input"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+            aria-describedby="loginEmailError"
+          >
+          <span class="form-error" id="loginEmailError" role="alert"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Password</label>
+          <div style="position:relative">
+            <input
+              type="password"
+              id="loginPassword"
+              name="password"
+              class="form-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+              style="padding-right:3rem"
+              aria-describedby="loginPasswordError"
+            >
+            <button type="button" class="pwd-toggle" id="loginPwdToggle"
+                    aria-label="Toggle password visibility"
+                    style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text-2);padding:0">
+              👁️
+            </button>
+          </div>
+          <span class="form-error" id="loginPasswordError" role="alert"></span>
+        </div>
+
+        <div class="auth-forgot">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button type="submit" id="loginSubmit" class="btn btn-primary" style="width:100%;justify-content:center">
+          <span class="btn-label">Sign In</span>
+          <span id="loginSpinner" class="btn-spinner"></span>
+        </button>
+
+        <div class="auth-divider">or continue with</div>
+
+        <!-- Social login (UI only) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <button type="button" class="btn btn-secondary"
+                  style="justify-content:center;gap:.5rem;font-size:.85rem"
+                  onclick="showToast('Social login coming soon!','info')">
+            <span>G</span> Google
+          </button>
+          <button type="button" class="btn btn-secondary"
+                  style="justify-content:center;gap:.5rem;font-size:.85rem"
+                  onclick="showToast('Social login coming soon!','info')">
+            <span>🍎</span> Apple
+          </button>
+        </div>
+
+      </form>
+
+      <div class="auth-back">
+        <a href="index.html">← Back to Volthive</a>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast container -->
+<div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  // Password visibility toggle
+  const loginPwdToggle = document.getElementById('loginPwdToggle');
+  const loginPwdInput  = document.getElementById('loginPassword');
+  if (loginPwdToggle && loginPwdInput) {
+    loginPwdToggle.addEventListener('click', () => {
+      const isText = loginPwdInput.type === 'text';
+      loginPwdInput.type = isText ? 'password' : 'text';
+      loginPwdToggle.textContent = isText ? '👁️' : '🙈';
+    });
+  }
+
+  // ── Redirect already-logged-in users ─────────────────────
+  const currentUser = JSON.parse(localStorage.getItem('volthive_user') || 'null');
+  if (currentUser) window.location.href = 'profile.html';
+</script>
+</body>
+</html>
